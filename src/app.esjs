@@ -1,22 +1,40 @@
-importar { Terminal } desde '@es-js/terminal'
+importar { Terminal } desde "@es-js/terminal"
+importar { obtenerJson } desde "https://desarrollo-aplicaciones.vercel.app/2024/code/obtener-json.js"
+importar { validarSecreto } desde "https://desarrollo-aplicaciones.vercel.app/2024/code/validar-secreto.js"
 
 asincrono funcion inicio() {
-	Terminal.limpiar()
+  Terminal.escribir("Hola! Ingresa la palabra secreta:")
 
-	Terminal.escribir('Ingresa un valor:')
+  var secreto = esperar Terminal.leer()
 
-	const resultado = esperar Terminal.leer()
+  var dni = "35550160" // Ingresa tu DNI aquí 👈
 
-	Terminal.escribir({
-		Resultado: resultado,
-		Tipo: tipoDe resultado,
-	})
+  si (esperar validarSecreto(dni, secreto)) {
+    esperar mostrarCotizacion()
+  } sino {
+    Terminal.escribir("Palabra secreta inválida")
+  }
 
-	Terminal.escribir('Presiona ENTER para volver a iniciar')
+  Terminal.escribir("Presiona ENTER para volver a ingresar")
 
-	esperar Terminal.leerEnter()
+  esperar Terminal.leerEnter()
 
-	esperar inicio()
+  Terminal.limpiar()
+
+  inicio()
+}
+
+asincrono funcion mostrarCotizacion() {
+    const dolarBlue = esperar obtenerJson("https://dolarapi.com/v1/dolares/blue")
+    const precioVenta = dolarBlue.venta
+    const precioCompra = dolarBlue.compra
+    const promedio = (precioCompra + precioVenta) / 2
+    const fecha = dolarBlue.fechaActualizacion
+    Terminal.escribir("Cotización del Dólar Blue")
+    Terminal.escribir("Precio para la venta: $" + precioVenta)
+    Terminal.escribir("Precio para la compra: $" + precioCompra)
+    Terminal.escribir("Promedio Compra/Venta: $" + promedio)
+    Terminal.escribir("Hora cotizacion: " + fecha)// Escribe tu código aquí 👈
 }
 
 inicio()
